@@ -1,0 +1,44 @@
+---
+name: Quality assurance
+on: [push, pull_request]
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ubuntu-latest]
+        php: [8.0, 7.4]
+        dependency-version: [prefer-lowest, prefer-stable]
+    name: PHP ${{ matrix.php }} - ${{ matrix.dependency-version }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: |
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction --no-suggest
+
+      - name: Run tests
+        run: vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
+
+      - name: Run tests & publish code coverage
+        uses: paambaati/codeclimate-action@v2.7.5
+        env:
+          CC_TEST_REPORTER_ID: ${{ secrets.CODECLIMATE_TEST_REPORTER_ID }}
+        with:
+          coverageCommand: vendor/bin/phpunit --verbose --coverage-clover=coverage.clover
+          coverageLocations: |
+            ${{github.workspace}}/*.clover:clover
+          debug: true
+
+      - name: Run PHPStan analysis
+        run: vendor/bin/phpstan analyse --memory-limit=-1
+        if: ${{ matrix.php == '7.4' }}
