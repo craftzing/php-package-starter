@@ -1,0 +1,26 @@
+{
+    "name": "craftzing/:package_name",
+    "description": ":package_description",
+    "keywords": [],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ":author_name",
+            "email": ":author_email"
+        }
+    ],
+    "require": {
+        "php": "^7.4|^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Craftzing\\:package_name\\": "src"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
