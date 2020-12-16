@@ -13,7 +13,8 @@ This package serves as a starting point to create a new PHP package. Everything'
 - ...
 
 Perform a "search and replace" action for the following placeholders and update them with an according value:
-- `:package_name`
+- `:package_name`: Please make sure to use lowercase and dashes as a separator (e.g. `my-package`)
+- `:package_namespace`: Not that the default namespace is already set to be `Craftzing\Laravel` (e.g. `MyPackage`)
 - `:package_description`
 - `:author_name`
 - `:author_email`
